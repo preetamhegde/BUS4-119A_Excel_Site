@@ -6,7 +6,7 @@
         <meta name="viewport" content="Width = device-width, intial-scale = 1.0"/>
         <title>Excel Site</title>
 
-        <link rel = "stylesheet" href ="/style.css"/>
+        <link rel = "stylesheet" href ="/static/style.css"/>
         <link
             rel = "stylesheet"
             href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -20,7 +20,7 @@
 
             <div class = "rounded-rectangle">
                 
-                <textarea class="text-box" id = "datainput"></textarea>
+                <textarea placeholder = "Enter Text Here... "class="text-box" id = "datainput"></textarea>
 
 
 
@@ -32,18 +32,23 @@
                     <button class = "blue-button" id = "Reset-Button">Reset</button>
                 </div>
             </div>
-            <div class = "rounded-rectangle" id = >
+            <div class = "rounded-rectangle" id = "box">
 
-
+                <div class="excel-container">
+                    {{ table_html|safe }}
+                </div>
 
                 <div class = "buttonplacement">
-                    <button class = "blue-button" id = "Submit-Button">Download</button>
+
+                    
+
+                    <a href="http://127.0.0.1:5000/download_excel" class="blue-button" id="Download-Button">Download</a>
                 
                 </div>
 
             </div>
         </div>
-        <script type = "module" src = "/index.js"></script>
+        <!-- <script type = "module" src = "/index.js"></script> -->
 
     </body>
 

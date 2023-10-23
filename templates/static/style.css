@@ -1,3 +1,12 @@
+
+title{
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
 body {
 
   font-family: 'Quicksand', sans-serif;
@@ -87,3 +96,28 @@ body {
   
   
 }
+
+.excel-container {
+  overflow-x: auto; /* Adds horizontal scrolling if table overflows */
+  max-width: 100%; /* Ensures it doesn't break out of its container */
+}
+
+.excel-table {
+    display: flex;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.excel-table th,
+.excel-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.excel-table th {
+    background-color: #f2f2f2;
+}
+
