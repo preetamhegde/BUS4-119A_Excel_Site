@@ -1,7 +1,7 @@
 from flask import Flask, send_from_directory, render_template
 import pandas as pd
 
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__, static_folder='static')
 
 @app.route('/download_excel')
 def download_excel():
