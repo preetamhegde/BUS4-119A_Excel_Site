@@ -11,7 +11,7 @@ app = Flask(__name__, static_folder='static')
 def download_excel():
     return send_from_directory('assets', 'SEMI_data.xlsx', as_attachment=True)
 
-@app.route('/display_excel')
+@app.route('')
 def display_excel():
     # Read the Excel file
     df = pd.read_excel('assets/SEMI_data.xlsx')
