@@ -10,7 +10,7 @@ from io import BytesIO
 @app.route('/download_excel')
 def download_excel():
     s3_client = boto3.client('s3')
-    bucket_name = os.getenv('bucketeer-58bf3e17-2194-44eb-9b1d-5fa4d1a88758')
+    bucket_name = os.getenv('bucketeer-d8081514-bbf1-41ce-a389-377a71cfe88c')
     file_key = 'assets/SEMI_data.xlsx'
 
     excel_file = s3_client.get_object(Bucket=bucket_name, Key=file_key)
@@ -23,7 +23,7 @@ def download_excel():
 @app.route('/')
 def display_excel():
     s3_client = boto3.client('s3')
-    bucket_name = os.getenv('bucketeer-58bf3e17-2194-44eb-9b1d-5fa4d1a88758')
+    bucket_name = os.getenv('bucketeer-d8081514-bbf1-41ce-a389-377a71cfe88c')
     file_key = 'assets/SEMI_data.xlsx'
 
     response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
@@ -40,11 +40,11 @@ def update_excel():
 
     s3_client = boto3.client(
     's3',
-    aws_access_key_id=os.getenv('AKIAVZH4SBSY3PPMN33E'),
-    aws_secret_access_key=os.getenv('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'),
+    aws_access_key_id=os.getenv('AKIAVZH4SBSYWIZVJR4D'),
+    aws_secret_access_key=os.getenv('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'),
     region_name='us-east-1'  
     )
-    bucket_name = os.getenv('bucketeer-58bf3e17-2194-44eb-9b1d-5fa4d1a88758')
+    bucket_name = os.getenv('bucketeer-d8081514-bbf1-41ce-a389-377a71cfe88c')
     file_key = 'assets/SEMI_data.xlsx'
 
     response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
