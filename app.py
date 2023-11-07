@@ -2,30 +2,57 @@ from flask import Flask, send_from_directory, render_template, request, jsonify
 import pandas as pd
 import openpyxl
 from fuzzywuzzy import process
-
-
-app = Flask(__name__, static_folder='static')
+import os
+import boto3
+from io import BytesIO
 
 
 @app.route('/download_excel')
 def download_excel():
-    return send_from_directory('assets', 'SEMI_data.xlsx', as_attachment=True)
+    s3_client = boto3.client('s3')
+    bucket_name = os.getenv('bucketeer-58bf3e17-2194-44eb-9b1d-5fa4d1a88758')
+    file_key = 'assets/SEMI_data.xlsx'
+
+    excel_file = s3_client.get_object(Bucket=bucket_name, Key=file_key)
+    return send_file(
+        BytesIO(excel_file['Body'].read()),
+        attachment_filename=file_key,
+        as_attachment=True
+    )
 
 @app.route('/')
 def display_excel():
-    # Read the Excel file
-    df = pd.read_excel('assets/SEMI_data.xlsx')
+    s3_client = boto3.client('s3')
+    bucket_name = os.getenv('bucketeer-58bf3e17-2194-44eb-9b1d-5fa4d1a88758')
+    file_key = 'assets/SEMI_data.xlsx'
 
-    # Convert the DataFrame to HTML
+    response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
+    excel_data = response['Body'].read()
+    df = pd.read_excel(BytesIO(excel_data))
+
     table_html = df.to_html(classes='excel-table', border=0)
-
-    # Render the HTML page and pass the table_html to it
     return render_template('index.html', table_html=table_html)
 
 
 
 @app.route('/update_excel', methods=['POST'])
 def update_excel():
+
+    s3_client = boto3.client(
+    's3',
+    aws_access_key_id=os.getenv('AKIAVZH4SBSY3PPMN33E'),
+    aws_secret_access_key=os.getenv('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'),
+    region_name='us-east-1'  
+    )
+    bucket_name = os.getenv('bucketeer-58bf3e17-2194-44eb-9b1d-5fa4d1a88758')
+    file_key = 'assets/SEMI_data.xlsx'
+
+    response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
+    excel_data = response['Body'].read()
+    workbook = openpyxl.load_workbook(BytesIO(excel_data))
+    sheet = workbook.active
+
+
     metrics_to_columns = {
     "Total water consumed": "B",
     "Municipal water usage": "C",
@@ -45,11 +72,6 @@ def update_excel():
     data = request.json.get('data')
     formatted_data = jsonifyData(data)
     
-    file_path = 'assets/SEMI_data.xlsx'
-    book = openpyxl.load_workbook(file_path)
-    sheet = book.active
-
-
 
 
 
@@ -74,10 +96,17 @@ def update_excel():
 
    
 
-    book.save(file_path)
+
+
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+
+    s3_client.put_object(Bucket=bucket_name, Key=file_key, Body=output)
 
     # Convert the updated Excel file to a DataFrame and then to HTML
-    df = pd.read_excel(file_path)
+    output.seek(0)
+    df = pd.read_excel(BytesIO(output.getvalue()))
     updated_table = df.to_html(classes='excel-table', border=0)
 
     # Return the updated table

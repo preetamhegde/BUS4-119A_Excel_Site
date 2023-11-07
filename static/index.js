@@ -24,6 +24,8 @@ function SubmitButton(){
     });
 }
 
+
+
 function ResetButton(){
     console.log('0');
     document.getElementById("datainput").value = "";
