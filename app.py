@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, render_template, request, jsonify
+from flask import Flask, send_file, send_from_directory, render_template, request, jsonify
 import pandas as pd
 import openpyxl
 from fuzzywuzzy import process
@@ -6,11 +6,16 @@ import os
 import boto3
 from io import BytesIO
 
+app = Flask(__name__)
+
+aws_access_key_id = os.getenv('BUCKETEER_AWS_ACCESS_KEY_ID')
+aws_secret_access_key = os.getenv('BUCKETEER_AWS_SECRET_ACCESS_KEY')
+bucket_name = os.getenv('BUCKETEER_BUCKET_NAME')
+
 
 @app.route('/download_excel')
 def download_excel():
-    s3_client = boto3.client('s3')
-    bucket_name = os.getenv('bucketeer-d8081514-bbf1-41ce-a389-377a71cfe88c')
+    s3_client = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
     file_key = 'assets/SEMI_data.xlsx'
 
     excel_file = s3_client.get_object(Bucket=bucket_name, Key=file_key)
@@ -22,8 +27,7 @@ def download_excel():
 
 @app.route('/')
 def display_excel():
-    s3_client = boto3.client('s3')
-    bucket_name = os.getenv('bucketeer-d8081514-bbf1-41ce-a389-377a71cfe88c')
+    s3_client = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
     file_key = 'assets/SEMI_data.xlsx'
 
     response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
@@ -39,12 +43,11 @@ def display_excel():
 def update_excel():
 
     s3_client = boto3.client(
-    's3',
-    aws_access_key_id=os.getenv('AKIAVZH4SBSYWIZVJR4D'),
-    aws_secret_access_key=os.getenv('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'),
-    region_name='us-east-1'  
+        's3',
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        region_name='us-east-1'
     )
-    bucket_name = os.getenv('bucketeer-d8081514-bbf1-41ce-a389-377a71cfe88c')
     file_key = 'assets/SEMI_data.xlsx'
 
     response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
