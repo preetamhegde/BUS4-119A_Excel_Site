@@ -18,12 +18,18 @@ def download_excel():
     s3_client = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
     file_key = 'assets/SEMI_data.xlsx'
 
-    excel_file = s3_client.get_object(Bucket=bucket_name, Key=file_key)
-    return send_file(
-        BytesIO(excel_file['Body'].read()),
-        attachment_filename=file_key,
-        as_attachment=True
-    )
+    try:
+        response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
+        excel_data = response['Body'].read()
+
+        return send_file(
+            BytesIO(excel_data),
+            as_attachment=True,
+            download_name='SEMI_data.xlsx',
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+    except Exception as e:
+        return str(e)
 
 @app.route('/')
 def display_excel():
