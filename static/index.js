@@ -1,7 +1,7 @@
 function SubmitButton(){
     console.log('working');
     var textareaValue = document.getElementById("datainput").value;
-    fetch("https://excelsites3-c21cda7946c2.herokuapp.com/update_excel", {
+    fetch("https://web-production-8da5.up.railway.app/update_excel", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
